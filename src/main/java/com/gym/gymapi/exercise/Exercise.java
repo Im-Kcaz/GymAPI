@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -26,9 +27,20 @@ public class Exercise {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(name = "uuid")
+    private UUID uuid;
+
     @Column(name = "name")
     @Enumerated(EnumType.STRING)
     private ExerciseType name;
+
+    @Column(name = "sets")
+    @Min(value = 1)
+    private Integer sets;
+
+    @Column(name = "reps")
+    @Min(value = 0)
+    private Integer reps;
 
     @Column(name = "target_weight")
     @Min(value = 0)
@@ -37,14 +49,6 @@ public class Exercise {
     @Column(name = "actual_weight")
     @Min(value = 0)
     private Float actualWeight;
-
-    @Column(name = "target_reps")
-    @Min(value = 0)
-    private Integer targetReps;
-
-    @Column(name = "actual_reps")
-    @Min(value = 0)
-    private Integer actualReps;
 
     @Column(name = "target_rpe")
     @Min(value = 0)

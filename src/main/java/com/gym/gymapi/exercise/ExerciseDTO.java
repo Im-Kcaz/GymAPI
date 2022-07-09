@@ -2,14 +2,15 @@ package com.gym.gymapi.exercise;
 
 import lombok.Data;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import java.io.Serializable;
+import java.util.UUID;
 
 @Data
 public class ExerciseDTO implements Serializable {
-    @Enumerated(EnumType.STRING)
-    private ExerciseType name;
+    private UUID uuid;
+    private String name;
+    private Integer sets;
+    private Integer reps;
     private Float targetWeight;
     private Float actualWeight;
     private Integer targetReps;

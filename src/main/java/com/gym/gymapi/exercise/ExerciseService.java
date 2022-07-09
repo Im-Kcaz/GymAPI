@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import javax.ws.rs.NotFoundException;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Data
@@ -23,7 +24,9 @@ public class ExerciseService {
 
     @Transactional
     public Exercise addExercise(ExerciseDTO exerciseDTO) {
-        return repository.save(convertDTOToEntity(exerciseDTO));
+        var exercise = convertDTOToEntity(exerciseDTO);
+        exercise.setUuid(UUID.randomUUID());
+        return repository.save(exercise);
     }
 
     @Transactional
@@ -50,6 +53,13 @@ public class ExerciseService {
     }
 
     private void updateEntityFromDTO(ExerciseDTO exerciseDTO, Exercise exercise) {
-        modelMapper.map(exercise, exerciseDTO);
+        exercise.setName(ExerciseType.valueOf(exerciseDTO.getName()));
+        exercise.setReps(exerciseDTO.getReps());
+        exercise.setSets(exerciseDTO.getSets());
+        exercise.setTargetWeight(exerciseDTO.getTargetWeight());
+        exercise.setActualWeight(exerciseDTO.getActualWeight());
+        exercise.setTargetRPE(exerciseDTO.getTargetRPE());
+        exercise.setActualRPE(exerciseDTO.getActualRPE());
+        exercise.setPauseTime(exerciseDTO.getPauseTime());
     }
 }

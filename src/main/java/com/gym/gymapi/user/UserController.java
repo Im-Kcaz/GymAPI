@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,11 +20,11 @@ public class UserController {
     @PostMapping
     @ResponseBody
     public User addUser(@RequestBody UserDTO userDto) {
-        if(userDto.getEmail() == null) {
+        if (userDto.getEmail() == null) {
             throw new IllegalArgumentException("Email cannot be null.");
         }
 
-        if(userDto.getPassword() == null) {
+        if (userDto.getPassword() == null) {
             throw new IllegalArgumentException("Password cannot be null.");
         }
 
@@ -37,12 +38,12 @@ public class UserController {
     }
 
     @PostMapping("/validate")
-    public Boolean validateUser(@RequestBody UserDTO userDto) {
-        if(userDto.getEmail() == null) {
+    public String validateUser(@RequestBody UserDTO userDto, @RequestHeader("authorization") String authorization) {
+        if (userDto.getEmail() == null) {
             throw new IllegalArgumentException("Email cannot be null.");
         }
 
-        if(userDto.getPassword() == null) {
+        if (userDto.getPassword() == null) {
             throw new IllegalArgumentException("Password cannot be null.");
         }
 

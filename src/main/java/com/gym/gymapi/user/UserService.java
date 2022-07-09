@@ -28,9 +28,11 @@ public class UserService {
                              .orElseThrow(NotFoundException::new);
     }
 
-    public Boolean validateUser(UserDTO userDto) {
+    public String validateUser(UserDTO userDto) {
         var user = userRepository.findUserByEmail(userDto.getEmail())
                                  .orElseThrow(NotFoundException::new);
-        return bCryptPasswordEncoder.matches(userDto.getPassword(), user.getPassword());
+        final var isValidUser =  bCryptPasswordEncoder.matches(userDto.getPassword(), user.getPassword());
+
+        return String.valueOf(isValidUser);
     }
 }
