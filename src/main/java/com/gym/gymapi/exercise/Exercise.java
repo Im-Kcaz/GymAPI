@@ -61,4 +61,5 @@ public class Exercise {
     @ManyToOne
     @JoinColumn(name = "workout_session_id")
     private WorkoutSession workoutSession;
+
 }

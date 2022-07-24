@@ -12,4 +12,5 @@ public interface ExerciseRepository extends JpaRepository<Exercise, UUID> {
 
     @Query(value = "SELECT * FROM exercises e WHERE e.workout_session_id = ?1", nativeQuery = true)
     List<Exercise> findByWorkoutSessionId(UUID id);
+
 }

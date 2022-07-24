@@ -49,5 +49,6 @@ public class ExerciseController {
     public ExerciseDTO updateExercise(@RequestBody ExerciseDTO exerciseDTO,
                                       @PathVariable UUID id) {
         return service.updateExercise(exerciseDTO, id);
+
     }
 }

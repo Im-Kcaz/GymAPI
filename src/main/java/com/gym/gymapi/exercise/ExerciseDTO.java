@@ -18,4 +18,5 @@ public class ExerciseDTO implements Serializable {
     private Float targetRPE;
     private Float actualRPE;
     private Integer pauseTime;
+
 }
