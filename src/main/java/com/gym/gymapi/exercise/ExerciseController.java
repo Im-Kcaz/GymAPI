@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.ws.rs.NotFoundException;
 import java.util.List;
+import java.util.UUID;
 
-@RequestMapping("/exercise")
+@RequestMapping("/exercises")
 @RestController
 public class ExerciseController {
 
@@ -22,12 +22,8 @@ public class ExerciseController {
 
     @PostMapping
     @ResponseBody
-    public Exercise createExercise(@RequestBody ExerciseDTO exerciseDTO) {
-        if (exerciseDTO == null) {
-            throw new IllegalArgumentException("Supplied exercise may not be null.");
-        }
-
-        return service.addExercise(exerciseDTO);
+    public ExerciseDTO createExercise(@RequestBody ExerciseDTO exerciseDTO) {
+        return service.createExercise(exerciseDTO);
     }
 
     @GetMapping
@@ -36,18 +32,22 @@ public class ExerciseController {
         return service.getAllExercises();
     }
 
+    @GetMapping("/{id}")
+    @ResponseBody
+    public ExerciseDTO getExercise(@PathVariable("id") UUID id) {
+        return service.getExercise(id);
+    }
+
+    @GetMapping("/workout-session/{workoutSessionID}")
+    @ResponseBody
+    public List<ExerciseDTO> getExercisesByWorkoutSession(@PathVariable("workoutSessionId") UUID workoutSessionId) {
+        return service.getExercisesByWorkoutSession(workoutSessionId);
+    }
+
     @PutMapping("/{id}")
     @ResponseBody
-    public Exercise updateExercise(@RequestBody ExerciseDTO exerciseDTO,
-                                   @PathVariable Long id) throws NotFoundException {
-        if (exerciseDTO == null) {
-            throw new IllegalArgumentException("Supplied exercise may not be null.");
-        }
-
-        if (id == null) {
-            throw new IllegalArgumentException("Supplied id may not be null.");
-        }
-
+    public ExerciseDTO updateExercise(@RequestBody ExerciseDTO exerciseDTO,
+                                      @PathVariable UUID id) {
         return service.updateExercise(exerciseDTO, id);
     }
 }

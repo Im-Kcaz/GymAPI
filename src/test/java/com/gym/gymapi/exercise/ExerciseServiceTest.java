@@ -1,65 +1,77 @@
 package com.gym.gymapi.exercise;
 
+import com.gym.gymapi.security.Auth0Client;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
-import org.modelmapper.ModelMapper;
-import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 
+@ExtendWith(SpringExtension.class)
+@SpringBootTest
 class ExerciseServiceTest {
 
-    private ExerciseService exerciseService;
+    @Autowired
+    ExerciseService exerciseService;
+
+    @MockBean
+    ExerciseRepository exerciseRepository;
+
+    @MockBean
+    Auth0Client auth0Client;
+
+    @MockBean
+    JwtDecoder jwtDecoder;
 
     @Test
-    void addExercise() {
-        var exerciseRepository = Mockito.mock(ExerciseRepository.class);
-        var exercise = new Exercise();
-        exercise.setId(1L);
+    void testCreateExercise() {
+        var exerciseDTO = new ExerciseDTO();
+        exerciseDTO.setId(UUID.randomUUID());
+        exerciseDTO.setExerciseType(ExerciseType.BENCH.toString());
+        exerciseDTO.setTargetReps(1);
+        exerciseDTO.setTargetWeight(10.0f);
+        exerciseDTO.setTargetRPE(8.0f);
+
+        var mapper = new ExerciseMapper();
+        var exercise = mapper.convertDTOToExercise(exerciseDTO);
+        exercise.setId(exerciseDTO.getId());
+
         Mockito.when(exerciseRepository.save(any(Exercise.class)))
                .thenReturn(exercise);
 
-        exerciseService = new ExerciseService(exerciseRepository, new ModelMapper());
-        var exerciseResult = exerciseService.addExercise(new ExerciseDTO());
-        assertThat(exerciseResult).isNotNull()
-                                  .isEqualTo(exercise);
+        var result = exerciseService.createExercise(exerciseDTO);
+
+        assertThat(result).isNotNull();
     }
 
     @Test
-    void getAllExercises() {
-        var exerciseRepository = Mockito.mock(ExerciseRepository.class);
+    void testGetExercise() {
+        var exerciseDTO = new ExerciseDTO();
+        exerciseDTO.setId(UUID.randomUUID());
+        exerciseDTO.setExerciseType(ExerciseType.BENCH.toString());
+        exerciseDTO.setTargetReps(1);
+        exerciseDTO.setTargetWeight(10.0f);
+        exerciseDTO.setTargetRPE(8.0f);
 
-        var squat = new Exercise();
-        squat.setId(1L);
+        var mapper = new ExerciseMapper();
+        var exercise = mapper.convertDTOToExercise(exerciseDTO);
+        exercise.setId(exerciseDTO.getId());
 
-        var exercises = List.of(squat);
-        Mockito.when(exerciseRepository.findAll())
-               .thenReturn(exercises);
-
-        exerciseService = new ExerciseService(exerciseRepository, new ModelMapper());
-        var exercisesResult = exerciseService.getAllExercises();
-        assertThat(exercisesResult).contains(squat);
-    }
-
-    @Test
-    void updateExercise() {
-        var exerciseRepository = Mockito.mock(ExerciseRepository.class);
-        var exercise = new Exercise();
-        exercise.setId(1L);
-
-        Mockito.when(exerciseRepository.findById(anyLong()))
+        Mockito.when(exerciseRepository.findById(exercise.getId()))
                .thenReturn(Optional.of(exercise));
-        Mockito.when(exerciseRepository.save(any(Exercise.class)))
-               .thenReturn((exercise));
 
-        exerciseService = new ExerciseService(exerciseRepository, new ModelMapper());
-        var exerciseResult = exerciseService.updateExercise(new ExerciseDTO(), 1L);
-        assertThat(exerciseResult).isNotNull()
-                                  .isEqualTo(exercise);
+        var result = exerciseService.getExercise(exerciseDTO.getId());
+
+        assertThat(result).isNotNull();
     }
+
 }

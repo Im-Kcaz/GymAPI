@@ -7,8 +7,8 @@ import java.util.UUID;
 
 @Data
 public class ExerciseDTO implements Serializable {
-    private UUID uuid;
-    private String name;
+    private UUID id;
+    private String exerciseType;
     private Integer sets;
     private Integer reps;
     private Float targetWeight;

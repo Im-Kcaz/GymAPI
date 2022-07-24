@@ -2,7 +2,6 @@ package com.gym.gymapi.exercise;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,13 +19,18 @@ public class ExerciseService {
     private ExerciseRepository repository;
 
     @Autowired
-    private ModelMapper modelMapper;
+    private ExerciseMapper exerciseMapper;
 
     @Transactional
-    public Exercise addExercise(ExerciseDTO exerciseDTO) {
-        var exercise = convertDTOToEntity(exerciseDTO);
-        exercise.setUuid(UUID.randomUUID());
-        return repository.save(exercise);
+    public ExerciseDTO createExercise(ExerciseDTO exerciseDTO) {
+        if (exerciseDTO == null) {
+            throw new IllegalArgumentException("Exercise cannot be null.");
+        }
+
+        var exercise = exerciseMapper.convertDTOToExercise(exerciseDTO);
+        exercise = repository.save(exercise);
+
+        return exerciseMapper.convertExerciseToDTO(exercise);
     }
 
     @Transactional
@@ -35,25 +39,52 @@ public class ExerciseService {
     }
 
     @Transactional
-    public Exercise updateExercise(ExerciseDTO exerciseDTO, Long id) throws NotFoundException {
+    public ExerciseDTO getExercise(UUID id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Exercise id cannot be null.");
+        }
+
+        var exercise = repository.findById(id)
+                                 .orElseThrow(NotFoundException::new);
+
+        return exerciseMapper.convertExerciseToDTO(exercise);
+    }
+
+    @Transactional
+    public List<ExerciseDTO> getExercisesByWorkoutSession(UUID workoutSessionId) {
+        if (workoutSessionId == null) {
+            throw new IllegalArgumentException("Workout Session id cannot be null.");
+        }
+
+        var exercises = repository.findByWorkoutSessionId(workoutSessionId);
+
+        return exercises.stream()
+                        .map(exercise -> exerciseMapper.convertExerciseToDTO(exercise))
+                        .toList();
+    }
+
+    @Transactional
+    public ExerciseDTO updateExercise(ExerciseDTO exerciseDTO, UUID id) {
+        if (exerciseDTO == null) {
+            throw new IllegalArgumentException("Exercise cannot be null.");
+        }
+
+        if (id == null) {
+            throw new IllegalArgumentException("Exercise id cannot be null.");
+        }
+
         var exercise = repository.findById(id)
                                  .orElseThrow(NotFoundException::new);
 
         updateEntityFromDTO(exerciseDTO, exercise);
 
-        return repository.save(exercise);
-    }
+        exercise = repository.save(exercise);
 
-    private Exercise convertDTOToEntity(ExerciseDTO exerciseDTO) {
-        var exercise = new Exercise();
-
-        updateEntityFromDTO(exerciseDTO, exercise);
-
-        return exercise;
+        return exerciseMapper.convertExerciseToDTO(exercise);
     }
 
     private void updateEntityFromDTO(ExerciseDTO exerciseDTO, Exercise exercise) {
-        exercise.setName(ExerciseType.valueOf(exerciseDTO.getName()));
+        exercise.setExerciseType(ExerciseType.valueOf(exerciseDTO.getExerciseType()));
         exercise.setReps(exerciseDTO.getReps());
         exercise.setSets(exerciseDTO.getSets());
         exercise.setTargetWeight(exerciseDTO.getTargetWeight());

@@ -1,17 +1,12 @@
 package com.gym.gymapi.exercise;
 
+import com.gym.gymapi.workoutsession.WorkoutSession;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.util.UUID;
@@ -20,19 +15,18 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
+@Table(name = "exercises", indexes = @Index(columnList = "workout_session_id"))
 public class Exercise {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue
+    @Column(columnDefinition = "binary(36)")
+    @Type(type = "org.hibernate.type.UUIDCharType")
+    private UUID id;
 
-    @Column(name = "uuid")
-    private UUID uuid;
-
-    @Column(name = "name")
+    @Column(name = "exercise_type")
     @Enumerated(EnumType.STRING)
-    private ExerciseType name;
+    private ExerciseType exerciseType;
 
     @Column(name = "sets")
     @Min(value = 1)
@@ -63,4 +57,8 @@ public class Exercise {
     @Column(name = "pause_time")
     @Min(value = 0)
     private Integer pauseTime;
+
+    @ManyToOne
+    @JoinColumn(name = "workout_session_id")
+    private WorkoutSession workoutSession;
 }

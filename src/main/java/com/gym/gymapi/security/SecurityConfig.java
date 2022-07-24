@@ -17,17 +17,22 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private static final String READ_USERS_SCOPE = "SCOPE_read:users";
+
+    private static final String PATH_START = "/";
+    private static final String EXERCISE_PATH = PATH_START + "exercise";
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors()
             .and()
             .authorizeRequests()
-            .antMatchers(HttpMethod.GET, "/exercise")
-            .hasAuthority("SCOPE_read:users")
-            .antMatchers(HttpMethod.POST, "/exercise")
-            .hasAuthority("SCOPE_read:users")
-            .anyRequest()
-            .authenticated()
+            .antMatchers(HttpMethod.GET, EXERCISE_PATH)
+            .hasAuthority(READ_USERS_SCOPE)
+            .antMatchers(HttpMethod.POST, EXERCISE_PATH)
+            .hasAuthority(READ_USERS_SCOPE)
+            .antMatchers(HttpMethod.PUT, EXERCISE_PATH)
+            .hasAuthority(READ_USERS_SCOPE)
             .and()
             .oauth2ResourceServer()
             .jwt();
