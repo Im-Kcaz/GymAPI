@@ -1,5 +1,7 @@
 package com.gym.gymapi.workoutsession;
 
+import com.gym.gymapi.workoutsession.dto.WorkoutSessionCreateDTO;
+import com.gym.gymapi.workoutsession.dto.WorkoutSessionViewDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/workoutSessions")
+@RequestMapping("/workoutSession")
 public class WorkoutSessionController {
 
     @Autowired
@@ -19,13 +21,13 @@ public class WorkoutSessionController {
 
     @PostMapping
     @ResponseBody
-    public WorkoutSessionDTO createWorkoutSession(WorkoutSessionDTO workoutSessionDTO) {
-        return workoutSessionService.createWorkoutSession(workoutSessionDTO);
+    public WorkoutSessionViewDTO createWorkoutSession(WorkoutSessionCreateDTO workoutSessionCreateDTO) {
+        return workoutSessionService.createWorkoutSession(workoutSessionCreateDTO);
     }
 
     @GetMapping("/{id}")
     @ResponseBody
-    public WorkoutSessionDTO getWorkoutSession(@PathVariable("id") UUID id) {
+    public WorkoutSessionViewDTO getWorkoutSession(@PathVariable("id") UUID id) {
         return workoutSessionService.getWorkoutSession(id);
     }
 

@@ -1,5 +1,8 @@
 package com.gym.gymapi.exercise;
 
+import com.gym.gymapi.exercise.dto.Exercise;
+import com.gym.gymapi.exercise.dto.ExerciseCreateDTO;
+import com.gym.gymapi.exercise.dto.ExerciseViewDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.UUID;
 
-@RequestMapping("/exercises")
+@RequestMapping("/exercise")
 @RestController
 public class ExerciseController {
 
@@ -22,8 +25,8 @@ public class ExerciseController {
 
     @PostMapping
     @ResponseBody
-    public ExerciseDTO createExercise(@RequestBody ExerciseDTO exerciseDTO) {
-        return service.createExercise(exerciseDTO);
+    public ExerciseViewDTO createExercise(@RequestBody ExerciseCreateDTO exerciseCreateDTO) {
+        return service.createExercise(exerciseCreateDTO);
     }
 
     @GetMapping
@@ -34,20 +37,20 @@ public class ExerciseController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public ExerciseDTO getExercise(@PathVariable("id") UUID id) {
+    public ExerciseViewDTO getExercise(@PathVariable("id") UUID id) {
         return service.getExercise(id);
     }
 
     @GetMapping("/workout-session/{workoutSessionID}")
     @ResponseBody
-    public List<ExerciseDTO> getExercisesByWorkoutSession(@PathVariable("workoutSessionId") UUID workoutSessionId) {
+    public List<ExerciseViewDTO> getExercisesByWorkoutSession(@PathVariable("workoutSessionId") UUID workoutSessionId) {
         return service.getExercisesByWorkoutSession(workoutSessionId);
     }
 
     @PutMapping("/{id}")
     @ResponseBody
-    public ExerciseDTO updateExercise(@RequestBody ExerciseDTO exerciseDTO,
-                                      @PathVariable UUID id) {
+    public ExerciseViewDTO updateExercise(@RequestBody ExerciseViewDTO exerciseDTO,
+                                          @PathVariable UUID id) {
         return service.updateExercise(exerciseDTO, id);
 
     }

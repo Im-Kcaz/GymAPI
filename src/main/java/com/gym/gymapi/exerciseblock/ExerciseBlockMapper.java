@@ -1,7 +1,11 @@
 package com.gym.gymapi.exerciseblock;
 
-import com.gym.gymapi.athlete.Athlete;
 import com.gym.gymapi.athlete.AthleteMapper;
+import com.gym.gymapi.athlete.dto.Athlete;
+import com.gym.gymapi.exerciseblock.dto.ExerciseBlock;
+import com.gym.gymapi.exerciseblock.dto.ExerciseBlockCreateDTO;
+import com.gym.gymapi.exerciseblock.dto.ExerciseBlockViewDTO;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,21 +15,21 @@ public class ExerciseBlockMapper {
     @Autowired
     private AthleteMapper athleteMapper;
 
-    public ExerciseBlockDTO convertExerciseBlockToDTO(ExerciseBlock exerciseBlock) {
+    @Autowired
+    private ModelMapper modelMapper;
+
+    public ExerciseBlockViewDTO convertEntityToViewDTO(ExerciseBlock exerciseBlock) {
         if (exerciseBlock == null) {
             return null;
         }
 
-        var exerciseBlockDTO = new ExerciseBlockDTO();
+        var exerciseBlockDTO = new ExerciseBlockViewDTO();
         exerciseBlockDTO.setId(exerciseBlock.getId());
-
-        var athleteDTO = athleteMapper.convertAthleteToDTO(exerciseBlock.getAthlete());
-        exerciseBlockDTO.setAthleteDTO(athleteDTO);
 
         return exerciseBlockDTO;
     }
 
-    public ExerciseBlock convertDTOToExerciseBlock(ExerciseBlockDTO exerciseBlockDTO) {
+    public ExerciseBlock convertViewDTOToEntity(ExerciseBlockViewDTO exerciseBlockDTO) {
         if (exerciseBlockDTO == null) {
             return null;
         }
@@ -36,5 +40,9 @@ public class ExerciseBlockMapper {
         exerciseBlock.setAthlete(athlete);
 
         return exerciseBlock;
+    }
+
+    public ExerciseBlock convertCreateDTOToEntity(ExerciseBlockCreateDTO exerciseBlockCreateDTO) {
+        return modelMapper.map(exerciseBlockCreateDTO, ExerciseBlock.class);
     }
 }

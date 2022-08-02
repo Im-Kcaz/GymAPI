@@ -1,6 +1,9 @@
 package com.gym.gymapi.workoutsession;
 
 import com.gym.gymapi.security.Auth0Client;
+import com.gym.gymapi.workoutsession.dto.WorkoutSession;
+import com.gym.gymapi.workoutsession.dto.WorkoutSessionCreateDTO;
+import com.gym.gymapi.workoutsession.dto.WorkoutSessionViewDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -26,6 +29,9 @@ class WorkoutSessionServiceTest {
     @MockBean
     WorkoutSessionRepository workoutSessionRepository;
 
+    @Autowired
+    WorkoutSessionMapper workoutSessionMapper;
+
     @MockBean
     Auth0Client auth0Client;
 
@@ -34,28 +40,25 @@ class WorkoutSessionServiceTest {
 
     @Test
     void testCreateWorkoutSession() {
-        var workoutSessionDTO = new WorkoutSessionDTO();
-        workoutSessionDTO.setId(UUID.randomUUID());
+        var workoutSessionCreateDTO = new WorkoutSessionCreateDTO();
 
-        var mapper = new WorkoutSessionMapper();
-        var workoutSession = mapper.convertDTOToWorkoutSession(workoutSessionDTO);
-        workoutSession.setId(workoutSessionDTO.getId());
+        var workoutSession = workoutSessionMapper.convertCreateDTOToEntity(workoutSessionCreateDTO);
+        workoutSession.setId(UUID.randomUUID());
 
         Mockito.when(workoutSessionRepository.save(any(WorkoutSession.class)))
                .thenReturn(workoutSession);
 
-        var result = workoutSessionService.createWorkoutSession(workoutSessionDTO);
+        var result = workoutSessionService.createWorkoutSession(workoutSessionCreateDTO);
 
         assertThat(result).isNotNull();
     }
 
     @Test
     void testGetWorkoutSession() {
-        var workoutSessionDTO = new WorkoutSessionDTO();
+        var workoutSessionDTO = new WorkoutSessionViewDTO();
         workoutSessionDTO.setId(UUID.randomUUID());
 
-        var mapper = new WorkoutSessionMapper();
-        var workoutSession = mapper.convertDTOToWorkoutSession(workoutSessionDTO);
+        var workoutSession = workoutSessionMapper.convertViewDTOToEntity(workoutSessionDTO);
         workoutSession.setId(workoutSessionDTO.getId());
 
         Mockito.when(workoutSessionRepository.findById(workoutSession.getId()))

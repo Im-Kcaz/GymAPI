@@ -1,10 +1,9 @@
-package com.gym.gymapi.athletepreference;
+package com.gym.gymapi.athletepreference.dto;
 
-import com.gym.gymapi.athlete.Athlete;
+import com.gym.gymapi.athlete.dto.Athlete;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,13 +17,11 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-@Table(name = "athlete_preferences")
+@Table(name = "athlete_preference")
 public class AthletePreference {
 
     @Id
     @GeneratedValue
-    @Column(columnDefinition = "binary(36)")
-    @Type(type = "org.hibernate.type.UUIDCharType")
     private UUID id;
 
     @OneToOne(mappedBy = "athletePreference")

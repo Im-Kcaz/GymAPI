@@ -1,44 +1,27 @@
 package com.gym.gymapi.exercise;
 
+import com.gym.gymapi.exercise.dto.Exercise;
+import com.gym.gymapi.exercise.dto.ExerciseCreateDTO;
+import com.gym.gymapi.exercise.dto.ExerciseViewDTO;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ExerciseMapper {
 
-    public ExerciseDTO convertExerciseToDTO(Exercise exercise) {
-        if (exercise == null) {
-            return null;
-        }
+    @Autowired
+    private ModelMapper modelMapper;
 
-        var exerciseDTO = new ExerciseDTO();
-        exerciseDTO.setId(exercise.getId());
-        exerciseDTO.setExerciseType(exercise.getExerciseType().toString());
-        exerciseDTO.setReps(exercise.getReps());
-        exerciseDTO.setSets(exercise.getSets());
-        exerciseDTO.setTargetWeight(exercise.getTargetWeight());
-        exerciseDTO.setActualWeight(exercise.getActualWeight());
-        exerciseDTO.setTargetRPE(exercise.getTargetRPE());
-        exerciseDTO.setActualRPE(exercise.getActualRPE());
-        exerciseDTO.setPauseTime(exercise.getPauseTime());
-
-        return exerciseDTO;
+    public ExerciseViewDTO convertEntityToViewDTO(Exercise exercise) {
+        return modelMapper.map(exercise, ExerciseViewDTO.class);
     }
 
-    public Exercise convertDTOToExercise(ExerciseDTO exerciseDTO) {
-        if (exerciseDTO == null) {
-            return null;
-        }
+    public Exercise convertCreateDTOToEntity(ExerciseCreateDTO exerciseCreateDTO) {
+        return modelMapper.map(exerciseCreateDTO, Exercise.class);
+    }
 
-        var exercise = new Exercise();
-        exercise.setExerciseType(ExerciseType.valueOf(exerciseDTO.getExerciseType()));
-        exercise.setReps(exerciseDTO.getReps());
-        exercise.setSets(exerciseDTO.getSets());
-        exercise.setTargetWeight(exerciseDTO.getTargetWeight());
-        exercise.setActualWeight(exerciseDTO.getActualWeight());
-        exercise.setTargetRPE(exerciseDTO.getTargetRPE());
-        exercise.setActualRPE(exerciseDTO.getActualRPE());
-        exercise.setPauseTime(exerciseDTO.getPauseTime());
-
-        return exercise;
+    public Exercise convertViewDTOToEntity(ExerciseViewDTO exerciseViewDTO) {
+        return modelMapper.map(exerciseViewDTO, Exercise.class);
     }
 }

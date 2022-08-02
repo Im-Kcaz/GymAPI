@@ -1,0 +1,10 @@
+version: '4.10.1'
+
+services:
+  db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: db_gymapp
+    ports:
+      - 3306:3306

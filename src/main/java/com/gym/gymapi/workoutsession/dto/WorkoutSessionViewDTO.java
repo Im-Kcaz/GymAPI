@@ -1,7 +1,7 @@
-package com.gym.gymapi.workoutsession;
+package com.gym.gymapi.workoutsession.dto;
 
-import com.gym.gymapi.exercise.Exercise;
-import com.gym.gymapi.exerciseblock.ExerciseBlock;
+import com.gym.gymapi.exercise.dto.Exercise;
+import com.gym.gymapi.exerciseblock.dto.ExerciseBlock;
 import lombok.Data;
 
 import java.sql.Date;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
-public class WorkoutSessionDTO {
+public class WorkoutSessionViewDTO {
     private UUID id;
     private ExerciseBlock exerciseBlock;
     private Date date;

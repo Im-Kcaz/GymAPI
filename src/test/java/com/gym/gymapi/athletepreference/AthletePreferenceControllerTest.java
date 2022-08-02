@@ -1,5 +1,7 @@
 package com.gym.gymapi.athletepreference;
 
+import com.gym.gymapi.athletepreference.dto.AthletePreferenceCreateDTO;
+import com.gym.gymapi.athletepreference.dto.AthletePreferenceViewDTO;
 import com.gym.gymapi.security.Auth0Client;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,29 +34,36 @@ class AthletePreferenceControllerTest {
 
     @Test
     void createAthletePreference() {
-        var athletePreferenceDTO = new AthletePreferenceDTO();
-        athletePreferenceDTO.setId(UUID.randomUUID());
+        var athletePreferenceCreateDTO = new AthletePreferenceCreateDTO();
+        athletePreferenceCreateDTO.setDistanceMeasurement("lb");
+        athletePreferenceCreateDTO.setWeightMeasurement("lb");
 
-        Mockito.when(athletePreferenceService.createAthletePreference(athletePreferenceDTO))
-               .thenReturn(athletePreferenceDTO);
+        var athletePreferenceViewDTO = new AthletePreferenceViewDTO();
+        athletePreferenceViewDTO.setDistanceMeasurement(athletePreferenceCreateDTO.getDistanceMeasurement());
+        athletePreferenceViewDTO.setWeightMeasurement(athletePreferenceCreateDTO.getWeightMeasurement());
 
-        var result = athletePreferenceController.createAthletePreference(athletePreferenceDTO);
+        Mockito.when(athletePreferenceService.createAthletePreference(athletePreferenceCreateDTO))
+               .thenReturn(athletePreferenceViewDTO);
+
+        var result = athletePreferenceController.createAthletePreference(athletePreferenceCreateDTO);
 
         assertThat(result).isNotNull()
-                          .isEqualTo(athletePreferenceDTO);
+                          .isEqualTo(athletePreferenceViewDTO);
     }
 
     @Test
     void getAthletePreference() {
-        var athletePreferenceDTO = new AthletePreferenceDTO();
-        athletePreferenceDTO.setId(UUID.randomUUID());
+        var athletePreferenceViewDTO = new AthletePreferenceViewDTO();
+        athletePreferenceViewDTO.setId(UUID.randomUUID());
+        athletePreferenceViewDTO.setWeightMeasurement("lb");
+        athletePreferenceViewDTO.setDistanceMeasurement("lb");
 
-        Mockito.when(athletePreferenceService.getAthletePreference(athletePreferenceDTO.getId()))
-               .thenReturn(athletePreferenceDTO);
+        Mockito.when(athletePreferenceService.getAthletePreference(athletePreferenceViewDTO.getId()))
+               .thenReturn(athletePreferenceViewDTO);
 
-        var result = athletePreferenceController.getAthletePreference(athletePreferenceDTO.getId());
+        var result = athletePreferenceController.getAthletePreference(athletePreferenceViewDTO.getId());
 
         assertThat(result).isNotNull()
-                          .isEqualTo(athletePreferenceDTO);
+                          .isEqualTo(athletePreferenceViewDTO);
     }
 }

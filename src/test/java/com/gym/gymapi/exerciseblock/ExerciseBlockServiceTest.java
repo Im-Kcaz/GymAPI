@@ -1,6 +1,9 @@
 package com.gym.gymapi.exerciseblock;
 
-import com.gym.gymapi.athlete.AthleteDTO;
+import com.gym.gymapi.athlete.dto.Athlete;
+import com.gym.gymapi.exerciseblock.dto.ExerciseBlock;
+import com.gym.gymapi.exerciseblock.dto.ExerciseBlockCreateDTO;
+import com.gym.gymapi.exerciseblock.dto.ExerciseBlockViewDTO;
 import com.gym.gymapi.security.Auth0Client;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,6 +27,9 @@ class ExerciseBlockServiceTest {
     @Autowired
     ExerciseBlockService exerciseBlockService;
 
+    @Autowired
+    ExerciseBlockMapper exerciseBlockMapper;
+
     @MockBean
     ExerciseBlockRepository exerciseBlockRepository;
 
@@ -35,44 +41,36 @@ class ExerciseBlockServiceTest {
 
     @Test
     void testCreateExerciseBlock() {
-        var exerciseBlockDTO = new ExerciseBlockDTO();
-        exerciseBlockDTO.setId(UUID.randomUUID());
+        var exerciseBlockCreateDTO = new ExerciseBlockCreateDTO();
 
-        var athleteDTO = new AthleteDTO();
-        athleteDTO.setId(UUID.randomUUID());
+        var exerciseBlock = exerciseBlockMapper.convertCreateDTOToEntity(exerciseBlockCreateDTO);
+        exerciseBlock.setId(UUID.randomUUID());
 
-        exerciseBlockDTO.setAthleteDTO(athleteDTO);
-
-        var mapper = new ExerciseBlockMapper();
-        var exerciseBlock = mapper.convertDTOToExerciseBlock(exerciseBlockDTO);
-        exerciseBlock.setId(exerciseBlockDTO.getId());
+        var athlete = new Athlete();
+        athlete.setId(UUID.randomUUID());
+        exerciseBlock.setAthlete(athlete);
+        exerciseBlockCreateDTO.setAthleteId(athlete.getId());
 
         Mockito.when(exerciseBlockRepository.save(any(ExerciseBlock.class)))
                .thenReturn(exerciseBlock);
 
-        var result = exerciseBlockService.createExerciseBlock(exerciseBlockDTO);
+        var result = exerciseBlockService.createExerciseBlock(exerciseBlockCreateDTO);
 
         assertThat(result).isNotNull();
     }
 
     @Test
     void testGetExerciseBlock() {
-        var exerciseBlockDTO = new ExerciseBlockDTO();
-        exerciseBlockDTO.setId(UUID.randomUUID());
+        var exerciseBlockViewDTO = new ExerciseBlockViewDTO();
+        exerciseBlockViewDTO.setId(UUID.randomUUID());
 
-        var athleteDTO = new AthleteDTO();
-        athleteDTO.setId(UUID.randomUUID());
-
-        exerciseBlockDTO.setAthleteDTO(athleteDTO);
-
-        var mapper = new ExerciseBlockMapper();
-        var exerciseBlock = mapper.convertDTOToExerciseBlock(exerciseBlockDTO);
-        exerciseBlock.setId(exerciseBlockDTO.getId());
+        var exerciseBlock = exerciseBlockMapper.convertViewDTOToEntity(exerciseBlockViewDTO);
+        exerciseBlock.setId(UUID.randomUUID());
 
         Mockito.when(exerciseBlockRepository.findById(exerciseBlock.getId()))
                .thenReturn(Optional.of(exerciseBlock));
 
-        var result = exerciseBlockService.getExerciseBlock(exerciseBlockDTO.getId());
+        var result = exerciseBlockService.getExerciseBlock(exerciseBlock.getId());
 
         assertThat(result).isNotNull();
     }

@@ -1,6 +1,8 @@
 package com.gym.gymapi.user;
 
 import com.gym.gymapi.security.Auth0Client;
+import com.gym.gymapi.user.dto.UserCreateDTO;
+import com.gym.gymapi.user.dto.UserViewDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -32,32 +34,37 @@ class UserControllerTest {
 
     @Test
     void testCreateUser() {
-        var userDTO = new UserDTO();
-        userDTO.setId(UUID.randomUUID());
-        userDTO.setFirstName("Test");
-        userDTO.setLastName("Test");
-        userDTO.setUserName("Test");
-        userDTO.setEmail("Test@test.com");
-        userDTO.setPassword("password");
+        var userCreateDTO = new UserCreateDTO();
+        userCreateDTO.setFirstName("Test");
+        userCreateDTO.setLastName("Test");
+        userCreateDTO.setUserName("Test");
+        userCreateDTO.setEmail("Test@test.com");
+        userCreateDTO.setPassword("password");
 
-        Mockito.when(userService.createUser(userDTO))
-               .thenReturn(userDTO);
+        var userViewDTO = new UserViewDTO();
+        userViewDTO.setId(UUID.randomUUID());
+        userViewDTO.setFirstName("Test");
+        userViewDTO.setLastName("Test");
+        userViewDTO.setUserName("Test");
+        userViewDTO.setEmail("Test@test.com");
 
-        var result = userController.createUser(userDTO);
+        Mockito.when(userService.createUser(userCreateDTO))
+               .thenReturn(userViewDTO);
+
+        var result = userController.createUser(userCreateDTO);
 
         assertThat(result).isNotNull()
-                           .isEqualTo(userDTO);
+                           .isEqualTo(userViewDTO);
     }
 
     @Test
     void testGetUser() {
-        var userDTO = new UserDTO();
+        var userDTO = new UserViewDTO();
         userDTO.setId(UUID.randomUUID());
         userDTO.setFirstName("Test");
         userDTO.setLastName("Test");
         userDTO.setUserName("Test");
         userDTO.setEmail("Test@test.com");
-        userDTO.setPassword("password");
 
         Mockito.when(userService.getUser(userDTO.getId()))
                .thenReturn(userDTO);

@@ -1,16 +1,14 @@
-package com.gym.gymapi.workoutsession;
+package com.gym.gymapi.workoutsession.dto;
 
-import com.gym.gymapi.exercise.Exercise;
-import com.gym.gymapi.exerciseblock.ExerciseBlock;
+import com.gym.gymapi.exercise.dto.Exercise;
+import com.gym.gymapi.exerciseblock.dto.ExerciseBlock;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -29,9 +27,7 @@ import java.util.UUID;
 public class WorkoutSession {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(columnDefinition = "binary(36)")
-    @Type(type = "org.hibernate.type.UUIDCharType")
+    @GeneratedValue
     private UUID id;
 
     @ManyToOne

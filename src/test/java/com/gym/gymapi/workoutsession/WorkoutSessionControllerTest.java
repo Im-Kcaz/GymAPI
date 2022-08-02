@@ -1,6 +1,9 @@
 package com.gym.gymapi.workoutsession;
 
 import com.gym.gymapi.security.Auth0Client;
+import com.gym.gymapi.workoutsession.dto.WorkoutSession;
+import com.gym.gymapi.workoutsession.dto.WorkoutSessionCreateDTO;
+import com.gym.gymapi.workoutsession.dto.WorkoutSessionViewDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -32,29 +35,25 @@ class WorkoutSessionControllerTest {
 
     @Test
     void createWorkoutSession() {
-        var workoutSessionDTO = new WorkoutSessionDTO();
-        workoutSessionDTO.setId(UUID.randomUUID());
+        var workoutSessionCreateDTO = new WorkoutSessionCreateDTO();
 
-        Mockito.when(workoutSessionService.createWorkoutSession(workoutSessionDTO))
-               .thenReturn(workoutSessionDTO);
+        Mockito.when(workoutSessionService.createWorkoutSession(workoutSessionCreateDTO))
+               .thenReturn(new WorkoutSessionViewDTO());
 
-        var result = workoutSessionController.createWorkoutSession(workoutSessionDTO);
+        var result = workoutSessionController.createWorkoutSession(workoutSessionCreateDTO);
 
-        assertThat(result).isNotNull()
-                          .isEqualTo(workoutSessionDTO);
+        assertThat(result).isNotNull();
     }
 
     @Test
     void getWorkoutSession() {
-        var workoutSessionDTO = new WorkoutSessionDTO();
-        workoutSessionDTO.setId(UUID.randomUUID());
+        var id = UUID.randomUUID();
 
-        Mockito.when(workoutSessionService.getWorkoutSession(workoutSessionDTO.getId()))
-               .thenReturn(workoutSessionDTO);
+        Mockito.when(workoutSessionService.getWorkoutSession(id))
+               .thenReturn(new WorkoutSessionViewDTO());
 
-        var result = workoutSessionController.getWorkoutSession(workoutSessionDTO.getId());
+        var result = workoutSessionController.getWorkoutSession(id);
 
-        assertThat(result).isNotNull()
-                          .isEqualTo(workoutSessionDTO);
+        assertThat(result).isNotNull();
     }
 }

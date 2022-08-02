@@ -1,5 +1,7 @@
 package com.gym.gymapi.user;
 
+import com.gym.gymapi.user.dto.UserCreateDTO;
+import com.gym.gymapi.user.dto.UserViewDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,34 +22,36 @@ public class UserService {
     private UserMapper userMapper;
 
     @Transactional
-    public UserDTO createUser(UserDTO userDto) {
-        if (userDto.getEmail() == null) {
+    public UserViewDTO createUser(UserCreateDTO userCreateDTO) {
+        if (userCreateDTO.getEmail() == null) {
             throw new IllegalArgumentException("Email cannot be null.");
         }
 
-        if (userDto.getPassword() == null) {
+        if (userCreateDTO.getPassword() == null) {
             throw new IllegalArgumentException("Password cannot be null.");
         }
 
-        var user = userMapper.convertDTOToUser(userDto);
-        user.setPassword(bCryptPasswordEncoder.encode(userDto.getPassword()));
-        userRepository.save(user);
-        return userMapper.convertUserToDTO(user);
+        var user = userMapper.convertCreateDTOToEntity(userCreateDTO);
+
+        user.setPassword(bCryptPasswordEncoder.encode(userCreateDTO.getPassword()));
+        user = userRepository.save(user);
+
+        return userMapper.convertEntityToViewDTO(user);
     }
 
     @Transactional
-    public UserDTO getUser(UUID id) {
-        if(id == null) {
+    public UserViewDTO getUser(UUID id) {
+        if (id == null) {
             throw new IllegalArgumentException("User id cannot be null.");
         }
 
         var user = userRepository.findById(id)
-                             .orElseThrow(NotFoundException::new);
+                                 .orElseThrow(NotFoundException::new);
 
-        return userMapper.convertUserToDTO(user);
+        return userMapper.convertEntityToViewDTO(user);
     }
 
-    public String validateUser(UserDTO userDto) {
+    public String validateUser(UserCreateDTO userDto) {
         if (userDto.getEmail() == null) {
             throw new IllegalArgumentException("Email cannot be null.");
         }

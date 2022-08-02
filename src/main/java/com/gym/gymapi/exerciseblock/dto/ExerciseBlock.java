@@ -1,13 +1,11 @@
-package com.gym.gymapi.exerciseblock;
+package com.gym.gymapi.exerciseblock.dto;
 
-import com.gym.gymapi.athlete.Athlete;
-import com.gym.gymapi.workoutsession.WorkoutSession;
+import com.gym.gymapi.athlete.dto.Athlete;
+import com.gym.gymapi.workoutsession.dto.WorkoutSession;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -22,13 +20,11 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-@Table(name = "exercise_blocks")
+@Table(name = "exercise_block")
 public class ExerciseBlock {
 
     @Id
     @GeneratedValue
-    @Column(columnDefinition = "binary(36)")
-    @Type(type = "org.hibernate.type.UUIDCharType")
     private UUID id;
 
     @ManyToOne
