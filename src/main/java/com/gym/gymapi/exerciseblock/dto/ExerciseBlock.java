@@ -5,7 +5,9 @@ import com.gym.gymapi.workoutsession.dto.WorkoutSession;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.Type;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -25,6 +27,8 @@ public class ExerciseBlock {
 
     @Id
     @GeneratedValue
+    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "VARCHAR(36)")
+    @Type(type="org.hibernate.type.UUIDCharType")
     private UUID id;
 
     @ManyToOne
