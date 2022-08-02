@@ -1,5 +1,7 @@
 package com.gym.gymapi.exerciseblock;
 
+import com.gym.gymapi.exerciseblock.dto.ExerciseBlockCreateDTO;
+import com.gym.gymapi.exerciseblock.dto.ExerciseBlockViewDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,28 +19,23 @@ public class ExerciseBlockService {
     private ExerciseBlockMapper exerciseBlockMapper;
 
     @Transactional
-    public ExerciseBlockDTO createExerciseBlock(ExerciseBlockDTO exerciseBlockDTO) {
-        if(exerciseBlockDTO == null) {
+    public ExerciseBlockViewDTO createExerciseBlock(ExerciseBlockCreateDTO exerciseBlockCreateDTO) {
+        if(exerciseBlockCreateDTO == null) {
             throw new IllegalArgumentException("Exercise Block cannot be null.");
         }
-        var athleteDTO = exerciseBlockDTO.getAthleteDTO();
 
-        if(athleteDTO == null) {
-            throw new IllegalArgumentException("Athlete cannot be null.");
-        }
-
-        if(athleteDTO.getId() == null) {
+        if(exerciseBlockCreateDTO.getAthleteId() == null) {
             throw new IllegalArgumentException("Athlete id cannot be null.");
         }
 
-        var exerciseBlock = exerciseBlockMapper.convertDTOToExerciseBlock(exerciseBlockDTO);
+        var exerciseBlock = exerciseBlockMapper.convertCreateDTOToEntity(exerciseBlockCreateDTO);
         exerciseBlock = exerciseBlockRepository.save(exerciseBlock);
 
-        return exerciseBlockMapper.convertExerciseBlockToDTO(exerciseBlock);
+        return exerciseBlockMapper.convertEntityToViewDTO(exerciseBlock);
     }
 
     @Transactional
-    public ExerciseBlockDTO getExerciseBlock(UUID id) {
+    public ExerciseBlockViewDTO getExerciseBlock(UUID id) {
         if(id == null) {
             throw new IllegalArgumentException("Exercise block id cannot be null.");
         }
@@ -46,6 +43,6 @@ public class ExerciseBlockService {
         var exerciseBlock = exerciseBlockRepository.findById(id)
                                                    .orElseThrow(NotFoundException::new);
 
-        return exerciseBlockMapper.convertExerciseBlockToDTO(exerciseBlock);
+        return exerciseBlockMapper.convertEntityToViewDTO(exerciseBlock);
     }
 }

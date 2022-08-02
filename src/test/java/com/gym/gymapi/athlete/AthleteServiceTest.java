@@ -1,7 +1,10 @@
 package com.gym.gymapi.athlete;
 
+import com.gym.gymapi.athlete.dto.Athlete;
+import com.gym.gymapi.athlete.dto.AthleteCreateDTO;
 import com.gym.gymapi.security.Auth0Client;
-import com.gym.gymapi.user.UserDTO;
+import com.gym.gymapi.user.dto.User;
+import com.gym.gymapi.user.dto.UserViewDTO;
 import com.gym.gymapi.user.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,45 +45,41 @@ class AthleteServiceTest {
 
     @Test
     void testCreateAthlete() {
-        var athleteDTO = new AthleteDTO();
-        athleteDTO.setId(UUID.randomUUID());
+        var athleteCreateDTO = new AthleteCreateDTO();
 
-        var userDTO = new UserDTO();
-        userDTO.setId(UUID.randomUUID());
+        athleteCreateDTO.setUserId(UUID.randomUUID());
 
-        athleteDTO.setUser(userDTO);
-
-        var athlete = athleteMapper.convertDTOToAthlete(athleteDTO);
-        athlete.setId(athleteDTO.getId());
+        var athlete = athleteMapper.convertCreateDTOToEntity(athleteCreateDTO);
+        UUID expectedAthleteId = UUID.randomUUID();
+        athlete.setId(expectedAthleteId);
 
         Mockito.when(athleteRepository.save(any(Athlete.class)))
                .thenReturn(athlete);
 
-        Mockito.when(userService.getUser(userDTO.getId()))
-               .thenReturn(userDTO);
+        Mockito.when(userService.getUser(athleteCreateDTO.getUserId()))
+               .thenReturn(new UserViewDTO());
 
-        var result = athleteService.createAthlete(athleteDTO);
+        var result = athleteService.createAthlete(athleteCreateDTO);
 
         assertThat(result).isNotNull();
     }
 
     @Test
     void testGetAthlete() {
-        var athleteDTO = new AthleteDTO();
-        athleteDTO.setId(UUID.randomUUID());
+        var athlete = new Athlete();
+        athlete.setId(UUID.randomUUID());
 
-        var userDTO = new UserDTO();
-        userDTO.setId(UUID.randomUUID());
-
-        athleteDTO.setUser(userDTO);
-
-        var athlete = athleteMapper.convertDTOToAthlete(athleteDTO);
-        athlete.setId(athleteDTO.getId());
+        var user = new User();
+        user.setId(UUID.randomUUID());
+        athlete.setUser(user);
 
         Mockito.when(athleteRepository.findById(athlete.getId()))
                .thenReturn(Optional.of(athlete));
 
-        var result = athleteService.getAthlete(athleteDTO.getId());
+        Mockito.when(userService.getUser(user.getId()))
+               .thenReturn(new UserViewDTO());
+
+        var result = athleteService.getAthlete(athlete.getId());
 
         assertThat(result).isNotNull();
     }

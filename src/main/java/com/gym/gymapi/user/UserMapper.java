@@ -1,36 +1,29 @@
 package com.gym.gymapi.user;
 
+import com.gym.gymapi.user.dto.User;
+import com.gym.gymapi.user.dto.UserCreateDTO;
+import com.gym.gymapi.user.dto.UserViewDTO;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserMapper {
 
-    public UserDTO convertUserToDTO(User user) {
-        if(user == null) {
-            return null;
-        }
+    @Autowired
+    ModelMapper modelMapper;
 
-        var dto = new UserDTO();
-        dto.setId(user.getId());
-        dto.setFirstName(user.getFirstName());
-        dto.setLastName(user.getLastName());
-        dto.setEmail(user.getEmail());
-        dto.setUserName(user.getUserName());
-
-        return dto;
+    public UserViewDTO convertEntityToViewDTO(User user) {
+        return modelMapper.map(user, UserViewDTO.class);
     }
 
-    public User convertDTOToUser(UserDTO userDTO) {
-        if(userDTO == null) {
-            return null;
-        }
+    public User convertCreateDTOToEntity(UserCreateDTO userCreateDTO) {
+        return modelMapper.typeMap(UserCreateDTO.class, User.class)
+                          .addMappings(mapping -> mapping.skip(User::setPassword))
+                          .map(userCreateDTO);
+    }
 
-        var user = new User();
-        user.setFirstName(userDTO.getFirstName());
-        user.setLastName(userDTO.getLastName());
-        user.setEmail(userDTO.getEmail());
-        user.setUserName(userDTO.getUserName());
-
-        return user;
+    public User convertViewDTOToEntity(UserViewDTO userViewDTO) {
+        return modelMapper.map(userViewDTO, User.class);
     }
 }

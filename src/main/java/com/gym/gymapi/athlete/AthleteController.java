@@ -1,5 +1,7 @@
 package com.gym.gymapi.athlete;
 
+import com.gym.gymapi.athlete.dto.AthleteCreateDTO;
+import com.gym.gymapi.athlete.dto.AthleteViewDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
-@RequestMapping("/athletes")
+@RequestMapping("/athlete")
 @RestController
 public class AthleteController {
     @Autowired
@@ -19,13 +21,13 @@ public class AthleteController {
 
     @PostMapping
     @ResponseBody
-    public AthleteDTO createAthlete(@RequestBody AthleteDTO athleteDTO) {
-        return athleteService.createAthlete(athleteDTO);
+    public AthleteViewDTO createAthlete(@RequestBody AthleteCreateDTO athleteCreateDTO) {
+        return athleteService.createAthlete(athleteCreateDTO);
     }
 
     @GetMapping("/{id}")
     @ResponseBody
-    public AthleteDTO getAthlete(@PathVariable("id") UUID id) {
+    public AthleteViewDTO getAthlete(@PathVariable("id") UUID id) {
         return athleteService.getAthlete(id);
     }
 

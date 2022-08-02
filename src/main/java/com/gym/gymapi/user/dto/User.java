@@ -1,22 +1,17 @@
-package com.gym.gymapi.user;
+package com.gym.gymapi.user.dto;
 
-import com.gym.gymapi.athlete.Athlete;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.Type;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
 import java.util.UUID;
 
 @Entity
@@ -25,16 +20,15 @@ import java.util.UUID;
 @ToString
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Table(name = "users")
+@Table(name = "user")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(columnDefinition = "binary(36)")
-    @Type(type = "org.hibernate.type.UUIDCharType")
+    @GeneratedValue
     private UUID id;
 
     @Column(nullable = false, unique = true)
+    @Email
     private String email;
 
     @Column(nullable = false, name = "first_name")
@@ -48,8 +42,4 @@ public class User {
 
     @Column(nullable = false)
     private String password;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "athlete_id", referencedColumnName = "id")
-    private Athlete athlete;
 }

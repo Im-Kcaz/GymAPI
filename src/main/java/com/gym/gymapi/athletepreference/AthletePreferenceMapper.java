@@ -1,6 +1,10 @@
 package com.gym.gymapi.athletepreference;
 
+import com.gym.gymapi.athletepreference.dto.AthletePreference;
+import com.gym.gymapi.athletepreference.dto.AthletePreferenceCreateDTO;
+import com.gym.gymapi.athletepreference.dto.AthletePreferenceViewDTO;
 import com.gym.gymapi.user.UserMapper;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -10,22 +14,14 @@ public class AthletePreferenceMapper {
     @Autowired
     private UserMapper userMapper;
 
-    public AthletePreferenceDTO convertAthletePreferenceToDTO(AthletePreference athletePreference) {
-        if(athletePreference == null) {
-            return null;
-        }
+    @Autowired
+    private ModelMapper modelMapper;
 
-        var athletePreferenceDTO = new AthletePreferenceDTO();
-        athletePreferenceDTO.setId(athletePreference.getId());
-
-        return athletePreferenceDTO;
+    public AthletePreferenceViewDTO convertEntityToViewDTO(AthletePreference athletePreference) {
+        return modelMapper.map(athletePreference, AthletePreferenceViewDTO.class);
     }
 
-    public AthletePreference convertDTOToAthletePreference(AthletePreferenceDTO athletePreferenceDTO) {
-        if(athletePreferenceDTO == null) {
-            return null;
-        }
-
-        return new AthletePreference();
+    public AthletePreference convertCreateDTOToEntity(AthletePreferenceCreateDTO athletePreferenceCreateDTO) {
+        return modelMapper.map(athletePreferenceCreateDTO, AthletePreference.class);
     }
 }

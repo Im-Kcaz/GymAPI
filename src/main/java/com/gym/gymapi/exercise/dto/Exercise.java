@@ -1,10 +1,10 @@
-package com.gym.gymapi.exercise;
+package com.gym.gymapi.exercise.dto;
 
-import com.gym.gymapi.workoutsession.WorkoutSession;
+import com.gym.gymapi.exercise.ExerciseType;
+import com.gym.gymapi.workoutsession.dto.WorkoutSession;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
@@ -15,13 +15,11 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-@Table(name = "exercises", indexes = @Index(columnList = "workout_session_id"))
+@Table(name = "exercise", indexes = @Index(columnList = "workout_session_id"))
 public class Exercise {
 
     @Id
     @GeneratedValue
-    @Column(columnDefinition = "binary(36)")
-    @Type(type = "org.hibernate.type.UUIDCharType")
     private UUID id;
 
     @Column(name = "exercise_type")

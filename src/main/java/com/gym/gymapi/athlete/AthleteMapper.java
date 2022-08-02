@@ -1,6 +1,10 @@
 package com.gym.gymapi.athlete;
 
+import com.gym.gymapi.athlete.dto.Athlete;
+import com.gym.gymapi.athlete.dto.AthleteCreateDTO;
+import com.gym.gymapi.athlete.dto.AthleteViewDTO;
 import com.gym.gymapi.user.UserMapper;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -10,30 +14,14 @@ public class AthleteMapper {
     @Autowired
     private UserMapper userMapper;
 
-    public AthleteDTO convertAthleteToDTO(Athlete athlete) {
-        if (athlete == null) {
-            return null;
-        }
+    @Autowired
+    private ModelMapper modelMapper;
 
-        var athleteDTO = new AthleteDTO();
-        athleteDTO.setId(athlete.getId());
-
-        var userDTO = userMapper.convertUserToDTO(athlete.getUser());
-        athleteDTO.setUser(userDTO);
-
-        return athleteDTO;
+    public Athlete convertCreateDTOToEntity(AthleteCreateDTO athleteCreateDTO) {
+        return modelMapper.map(athleteCreateDTO, Athlete.class);
     }
 
-    public Athlete convertDTOToAthlete(AthleteDTO athleteDTO) {
-        if (athleteDTO == null) {
-            return null;
-        }
-
-        var athlete = new Athlete();
-
-        var user = userMapper.convertDTOToUser(athleteDTO.getUser());
-        athlete.setUser(user);
-
-        return athlete;
+    public AthleteViewDTO convertEntityToViewDTO(Athlete athlete) {
+        return modelMapper.map(athlete, AthleteViewDTO.class);
     }
 }

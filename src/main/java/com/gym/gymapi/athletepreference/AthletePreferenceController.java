@@ -1,5 +1,7 @@
 package com.gym.gymapi.athletepreference;
 
+import com.gym.gymapi.athletepreference.dto.AthletePreferenceCreateDTO;
+import com.gym.gymapi.athletepreference.dto.AthletePreferenceViewDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
-@RequestMapping("/athletePreferences")
+@RequestMapping("/athletePreference")
 @RestController
 public class AthletePreferenceController {
 
@@ -20,17 +22,13 @@ public class AthletePreferenceController {
 
     @PostMapping
     @ResponseBody
-    public AthletePreferenceDTO createAthletePreference(@RequestBody AthletePreferenceDTO athletePreferenceDTO) {
-        return athletePreferenceService.createAthletePreference(athletePreferenceDTO);
+    public AthletePreferenceViewDTO createAthletePreference(@RequestBody AthletePreferenceCreateDTO athletePreferenceCreateDTO) {
+        return athletePreferenceService.createAthletePreference(athletePreferenceCreateDTO);
     }
 
     @GetMapping("/{id}")
     @ResponseBody
-    public AthletePreferenceDTO getAthletePreference(@PathVariable("id") UUID id) {
-        if (id == null) {
-            throw new IllegalArgumentException("Athlete Preference id cannot be null.");
-        }
-
+    public AthletePreferenceViewDTO getAthletePreference(@PathVariable("id") UUID id) {
         return athletePreferenceService.getAthletePreference(id);
     }
 

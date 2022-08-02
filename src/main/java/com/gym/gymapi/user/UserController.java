@@ -1,5 +1,7 @@
 package com.gym.gymapi.user;
 
+import com.gym.gymapi.user.dto.UserCreateDTO;
+import com.gym.gymapi.user.dto.UserViewDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
-@RequestMapping("/users")
+@RequestMapping("/user")
 @RestController
 public class UserController {
 
@@ -21,18 +23,19 @@ public class UserController {
 
     @PostMapping
     @ResponseBody
-    public UserDTO createUser(@RequestBody UserDTO userDto) {
-        return userService.createUser(userDto);
+    public UserViewDTO createUser(@RequestBody UserCreateDTO userCreateDTO) {
+        return userService.createUser(userCreateDTO);
     }
 
     @GetMapping("/{id}")
     @ResponseBody
-    public UserDTO getUser(@PathVariable("id") UUID id) {
+    public UserViewDTO getUser(@PathVariable("id") UUID id) {
         return userService.getUser(id);
     }
 
     @PostMapping("/validate")
-    public String validateUser(@RequestBody UserDTO userDto, @RequestHeader("authorization") String authorization) {
-        return userService.validateUser(userDto);
+    public String validateUser(@RequestBody UserViewDTO userViewDTO,
+                               @RequestHeader("authorization") String authorization) {
+        return "";
     }
 }

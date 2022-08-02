@@ -1,5 +1,7 @@
 package com.gym.gymapi.athlete;
 
+import com.gym.gymapi.athlete.dto.AthleteCreateDTO;
+import com.gym.gymapi.athlete.dto.AthleteViewDTO;
 import com.gym.gymapi.security.Auth0Client;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,6 +23,9 @@ class AthleteControllerTest {
     @Autowired
     AthleteController athleteController;
 
+    @Autowired
+    AthleteMapper athleteMapper;
+
     @MockBean
     AthleteService athleteService;
 
@@ -32,21 +37,23 @@ class AthleteControllerTest {
 
     @Test
     void createAthlete() {
-        var athleteDTO = new AthleteDTO();
-        athleteDTO.setId(UUID.randomUUID());
+        var athleteDTO = new AthleteCreateDTO();
+
+        var athleteViewDTO = new AthleteViewDTO();
+        athleteViewDTO.setId(UUID.randomUUID());
 
         Mockito.when(athleteService.createAthlete(athleteDTO))
-               .thenReturn(athleteDTO);
+               .thenReturn(athleteViewDTO);
 
         var result = athleteController.createAthlete(athleteDTO);
 
         assertThat(result).isNotNull()
-                          .isEqualTo(athleteDTO);
+                          .isEqualTo(athleteViewDTO);
     }
 
     @Test
     void getAthlete() {
-        var athleteDTO = new AthleteDTO();
+        var athleteDTO = new AthleteViewDTO();
         athleteDTO.setId(UUID.randomUUID());
 
         Mockito.when(athleteService.getAthlete(athleteDTO.getId()))

@@ -1,5 +1,7 @@
 package com.gym.gymapi.exercise;
 
+import com.gym.gymapi.exercise.dto.ExerciseCreateDTO;
+import com.gym.gymapi.exercise.dto.ExerciseViewDTO;
 import com.gym.gymapi.security.Auth0Client;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,29 +34,26 @@ class ExerciseControllerTest {
 
     @Test
     void createExercise() {
-        var exerciseDTO = new ExerciseDTO();
-        exerciseDTO.setId(UUID.randomUUID());
+        var exerciseCreateDTO = new ExerciseCreateDTO();
 
-        Mockito.when(exerciseService.createExercise(exerciseDTO))
-               .thenReturn(exerciseDTO);
+        Mockito.when(exerciseService.createExercise(exerciseCreateDTO))
+               .thenReturn(new ExerciseViewDTO());
 
-        var result = exerciseController.createExercise(exerciseDTO);
+        var result = exerciseController.createExercise(exerciseCreateDTO);
 
-        assertThat(result).isNotNull()
-                          .isEqualTo(exerciseDTO);
+        assertThat(result).isNotNull();
     }
 
     @Test
     void getExercise() {
-        var exerciseDTO = new ExerciseDTO();
-        exerciseDTO.setId(UUID.randomUUID());
+        var exerciseViewDTO = new ExerciseViewDTO();
+        exerciseViewDTO.setId(UUID.randomUUID());
 
-        Mockito.when(exerciseService.getExercise(exerciseDTO.getId()))
-               .thenReturn(exerciseDTO);
+        Mockito.when(exerciseService.getExercise(exerciseViewDTO.getId()))
+               .thenReturn(exerciseViewDTO);
 
-        var result = exerciseController.getExercise(exerciseDTO.getId());
+        var result = exerciseController.getExercise(exerciseViewDTO.getId());
 
-        assertThat(result).isNotNull()
-                          .isEqualTo(exerciseDTO);
+        assertThat(result).isNotNull();
     }
 }

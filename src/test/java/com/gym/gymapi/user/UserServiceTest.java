@@ -1,6 +1,9 @@
 package com.gym.gymapi.user;
 
 import com.gym.gymapi.security.Auth0Client;
+import com.gym.gymapi.user.dto.User;
+import com.gym.gymapi.user.dto.UserCreateDTO;
+import com.gym.gymapi.user.dto.UserViewDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -23,6 +26,9 @@ class UserServiceTest {
     @Autowired
     UserService userService;
 
+    @Autowired
+    UserMapper userMapper;
+
     @MockBean
     UserRepository userRepository;
 
@@ -34,62 +40,75 @@ class UserServiceTest {
 
     @Test
     void testCreateUser() {
-        var userDTO = new UserDTO();
-        userDTO.setId(UUID.randomUUID());
-        userDTO.setFirstName("Test");
-        userDTO.setLastName("Test");
-        userDTO.setUserName("Test");
-        userDTO.setEmail("Test@test.com");
-        userDTO.setPassword("password");
+        var userCreateDTO = new UserCreateDTO();
+        userCreateDTO.setFirstName("Test");
+        userCreateDTO.setLastName("Test");
+        userCreateDTO.setUserName("Test");
+        userCreateDTO.setEmail("Test@test.com");
+        userCreateDTO.setPassword("password");
 
-        var mapper = new UserMapper();
-        var user = mapper.convertDTOToUser(userDTO);
-        user.setId(userDTO.getId());
+        var uuid = UUID.randomUUID();
+
+        var userViewDTO = new UserViewDTO();
+        userViewDTO.setId(UUID.randomUUID());
+        userViewDTO.setFirstName("Test");
+        userViewDTO.setLastName("Test");
+        userViewDTO.setUserName("Test");
+        userViewDTO.setEmail("Test@test.com");
+        var user = userMapper.convertCreateDTOToEntity(userCreateDTO);
+        user.setId(uuid);
 
         Mockito.when(userRepository.save(any(User.class)))
                .thenReturn(user);
 
-        var result = userService.createUser(userDTO);
+        var result = userService.createUser(userCreateDTO);
 
-        assertThat(userDTO).isNotNull()
-                           .extracting(UserDTO::getEmail,
-                                       UserDTO::getUserName,
-                                       UserDTO::getFirstName,
-                                       UserDTO::getLastName)
-                           .containsExactly(result.getEmail(),
-                                            result.getUserName(),
-                                            result.getFirstName(),
-                                            result.getLastName());
+        assertThat(result).isNotNull()
+                           .extracting(UserViewDTO::getEmail,
+                                       UserViewDTO::getUserName,
+                                       UserViewDTO::getFirstName,
+                                       UserViewDTO::getLastName)
+                           .containsExactly(userViewDTO.getEmail(),
+                                            userViewDTO.getUserName(),
+                                            userViewDTO.getFirstName(),
+                                            userViewDTO.getLastName());
     }
 
     @Test
     void testGetUser() {
-        var userDTO = new UserDTO();
-        userDTO.setId(UUID.randomUUID());
-        userDTO.setFirstName("Test");
-        userDTO.setLastName("Test");
-        userDTO.setUserName("Test");
-        userDTO.setEmail("Test@test.com");
-        userDTO.setPassword("password");
+        var userCreateDTO = new UserCreateDTO();
+        userCreateDTO.setFirstName("Test");
+        userCreateDTO.setLastName("Test");
+        userCreateDTO.setUserName("Test");
+        userCreateDTO.setEmail("Test@test.com");
+        userCreateDTO.setPassword("password");
 
-        var mapper = new UserMapper();
-        var user = mapper.convertDTOToUser(userDTO);
-        user.setId(userDTO.getId());
+        var uuid = UUID.randomUUID();
+
+        var userViewDTO = new UserViewDTO();
+        userViewDTO.setId(UUID.randomUUID());
+        userViewDTO.setFirstName("Test");
+        userViewDTO.setLastName("Test");
+        userViewDTO.setUserName("Test");
+        userViewDTO.setEmail("Test@test.com");
+
+        var user = userMapper.convertCreateDTOToEntity(userCreateDTO);
+        user.setId(uuid);
 
         Mockito.when(userRepository.findById(user.getId()))
                .thenReturn(Optional.of(user));
 
-        var result = userService.getUser(userDTO.getId());
+        var result = userService.getUser(user.getId());
 
         assertThat(result).isNotNull()
-                           .extracting(UserDTO::getEmail,
-                                       UserDTO::getUserName,
-                                       UserDTO::getFirstName,
-                                       UserDTO::getLastName)
-                           .containsExactly(userDTO.getEmail(),
-                                            userDTO.getUserName(),
-                                            userDTO.getFirstName(),
-                                            userDTO.getLastName());
+                           .extracting(UserViewDTO::getEmail,
+                                       UserViewDTO::getUserName,
+                                       UserViewDTO::getFirstName,
+                                       UserViewDTO::getLastName)
+                           .containsExactly(userViewDTO.getEmail(),
+                                            userViewDTO.getUserName(),
+                                            userViewDTO.getFirstName(),
+                                            userViewDTO.getLastName());
     }
 
 }

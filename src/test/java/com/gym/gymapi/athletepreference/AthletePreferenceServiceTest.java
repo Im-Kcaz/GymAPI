@@ -1,5 +1,10 @@
 package com.gym.gymapi.athletepreference;
 
+import com.gym.gymapi.athlete.AthleteService;
+import com.gym.gymapi.athlete.dto.Athlete;
+import com.gym.gymapi.athlete.dto.AthleteViewDTO;
+import com.gym.gymapi.athletepreference.dto.AthletePreference;
+import com.gym.gymapi.athletepreference.dto.AthletePreferenceCreateDTO;
 import com.gym.gymapi.security.Auth0Client;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,8 +28,14 @@ class AthletePreferenceServiceTest {
     @Autowired
     AthletePreferenceService athletePreferenceService;
 
+    @Autowired
+    AthletePreferenceMapper athletePreferenceMapper;
+
     @MockBean
     AthletePreferenceRepository athletePreferenceRepository;
+
+    @MockBean
+    AthleteService athleteService;
 
     @MockBean
     Auth0Client auth0Client;
@@ -34,34 +45,41 @@ class AthletePreferenceServiceTest {
 
     @Test
     void testCreateAthletePreference() {
-        var athletePreferenceDTO = new AthletePreferenceDTO();
-        athletePreferenceDTO.setId(UUID.randomUUID());
+        var athletePreferenceCreateDTO = new AthletePreferenceCreateDTO();
 
-        var mapper = new AthletePreferenceMapper();
-        var athletePreference = mapper.convertDTOToAthletePreference(athletePreferenceDTO);
-        athletePreference.setId(athletePreferenceDTO.getId());
+        athletePreferenceCreateDTO.setAthleteId(UUID.randomUUID());
+
+        var athletePreference = athletePreferenceMapper.convertCreateDTOToEntity(athletePreferenceCreateDTO);
+        UUID expectedAthletePreferenceId = UUID.randomUUID();
+        athletePreference.setId(expectedAthletePreferenceId);
 
         Mockito.when(athletePreferenceRepository.save(any(AthletePreference.class)))
                .thenReturn(athletePreference);
 
-        var result = athletePreferenceService.createAthletePreference(athletePreferenceDTO);
+        Mockito.when(athleteService.getAthlete(athletePreferenceCreateDTO.getAthleteId()))
+               .thenReturn(new AthleteViewDTO());
+
+        var result = athletePreferenceService.createAthletePreference(athletePreferenceCreateDTO);
 
         assertThat(result).isNotNull();
     }
 
     @Test
     void testGetAthletePreference() {
-        var athletePreferenceDTO = new AthletePreferenceDTO();
-        athletePreferenceDTO.setId(UUID.randomUUID());
+        var athletePreference = new AthletePreference();
+        athletePreference.setId(UUID.randomUUID());
 
-        var mapper = new AthletePreferenceMapper();
-        var athletePreference = mapper.convertDTOToAthletePreference(athletePreferenceDTO);
-        athletePreference.setId(athletePreferenceDTO.getId());
+        var athlete = new Athlete();
+        athlete.setId(UUID.randomUUID());
+        athletePreference.setAthlete(athlete);
 
         Mockito.when(athletePreferenceRepository.findById(athletePreference.getId()))
                .thenReturn(Optional.of(athletePreference));
 
-        var result = athletePreferenceService.getAthletePreference(athletePreferenceDTO.getId());
+        Mockito.when(athleteService.getAthlete(athlete.getId()))
+               .thenReturn(new AthleteViewDTO());
+
+        var result = athletePreferenceService.getAthletePreference(athletePreference.getId());
 
         assertThat(result).isNotNull();
     }
