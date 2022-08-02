@@ -41,7 +41,7 @@ class UserServiceIntegrationTest {
     }
 
     @Test
-    void test() {
+    void testCreateUser() {
         var userCreateDTO = new UserCreateDTO();
         userCreateDTO.setFirstName("Test");
         userCreateDTO.setLastName("Test");
